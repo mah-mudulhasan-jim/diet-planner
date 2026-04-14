@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('role')->default('user');
+            $table->integer('height_cm')->nullable();
+            $table->decimal('current_weight_kg', 5, 2)->nullable();
+            $table->enum('goal_type', ['lose', 'maintain', 'gain'])->default('maintain');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
