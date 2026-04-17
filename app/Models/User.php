@@ -51,6 +51,21 @@ class User extends Authenticatable
         ];
     }
 
+    // Calculates Daily Calorie Target based on weight and goal
+    public function getDailyCalorieTargetAttribute()
+    {
+        // Simple Base Metabolic Rate (BMR) estimate: Weight(kg) * 24
+        $baseCalories = $this->current_weight_kg * 24;
+
+        if ($this->goal_type === 'lose') {
+            return $baseCalories - 500; // Caloric deficit
+        } elseif ($this->goal_type === 'gain') {
+            return $baseCalories + 500; // Caloric surplus
+        }
+
+        return $baseCalories; // Maintenance
+    }
+    
     public function weightLogs()
     {
         return $this->hasMany(WeightLog::class);

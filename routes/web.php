@@ -11,12 +11,23 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
-    // Fetch the user's weight history, newest first
-    $weightLogs = $user->weightLogs()->orderBy('date', 'desc')->get();
     
-    return view('dashboard', compact('user', 'weightLogs'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+    // Fetch the user's weight history
+    $weightLogs = $user->weightLogs()->orderBy('date', 'desc')->get();
 
+    // Fetch ONLY today's meals to calculate the progress bar
+    $todaysMeals = $user->mealLogs()->with('food')->where('date', date('Y-m-d'))->get();
+
+    // Math: Sum up the calories for today
+    $caloriesEaten = 0;
+    foreach ($todaysMeals as $log) {
+        $multiplier = $log->quantity_g / 100;
+        $caloriesEaten += ($log->food->calories_per_100g * $multiplier);
+    }
+    $caloriesEaten = round($caloriesEaten);
+
+    return view('dashboard', compact('user', 'weightLogs', 'caloriesEaten'));
+})->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -7,6 +7,33 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @php
+                $target = $user->daily_calorie_target;
+                $percentage = $target > 0 ? min(100, round(($caloriesEaten / $target) * 100)) : 0;
+                
+                // Color logic: green if good, red if they overate
+                $barColor = $caloriesEaten > $target ? 'bg-red-500' : 'bg-green-500';
+            @endphp
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <h3 class="text-lg font-bold mb-2">Today's Calorie Progress</h3>
+                
+                <div class="flex justify-between text-sm mb-1">
+                    <span><strong class="text-lg">{{ $caloriesEaten }}</strong> kcal eaten</span>
+                    <span><strong class="text-lg">{{ $target }}</strong> kcal target</span>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-4 mt-2 mb-2">
+                    <div class="{{ $barColor }} h-4 rounded-full transition-all duration-500 ease-in-out" style="width: {{ $percentage }}%"></div>
+                </div>
+                
+                <p class="text-sm text-gray-500 text-right mt-1">
+                    @if($caloriesEaten > $target)
+                        <span class="text-red-500 font-bold">You are {{ $caloriesEaten - $target }} kcal over your limit!</span>
+                    @else
+                        <span class="text-green-600 font-bold">{{ $target - $caloriesEaten }} kcal</span> remaining today.
+                    @endif
+                </p>
+            </div>
             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <h3 class="text-lg font-bold mb-4">My Profile</h3>
