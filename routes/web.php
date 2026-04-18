@@ -14,10 +14,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
     
-    // Fetch the user's weight history (newest first for the list)
+    // Fetch the user's weight history for the list
     $weightLogs = $user->weightLogs()->orderBy('date', 'desc')->get();
 
-    // Format data specifically for the Chart (oldest first so it reads left-to-right)
+    // Format data specifically for the Line Chart
     $chartData = $user->weightLogs()->orderBy('date', 'asc')->get();
     $chartDates = $chartData->pluck('date')->toJson();
     $chartWeights = $chartData->pluck('weight_kg')->toJson();
@@ -25,15 +25,32 @@ Route::get('/dashboard', function () {
     // Fetch today's meals
     $todaysMeals = $user->mealLogs()->with('food')->where('date', date('Y-m-d'))->get();
 
-    // Math: Sum up the calories for today
+    // Initialize all our tracking variables
     $caloriesEaten = 0;
+    $proteinEaten = 0;
+    $carbsEaten = 0;
+    $fatEaten = 0;
+
+    // Math: Sum up everything for today
     foreach ($todaysMeals as $log) {
         $multiplier = $log->quantity_g / 100;
         $caloriesEaten += ($log->food->calories_per_100g * $multiplier);
+        $proteinEaten += ($log->food->protein_g * $multiplier);
+        $carbsEaten += ($log->food->carbs_g * $multiplier);
+        $fatEaten += ($log->food->fat_g * $multiplier);
     }
-    $caloriesEaten = round($caloriesEaten);
 
-    return view('dashboard', compact('user', 'weightLogs', 'caloriesEaten', 'chartDates', 'chartWeights'));
+    // Round the values so we don't have crazy decimals
+    $caloriesEaten = round($caloriesEaten);
+    $proteinEaten = round($proteinEaten, 1);
+    $carbsEaten = round($carbsEaten, 1);
+    $fatEaten = round($fatEaten, 1);
+
+    return view('dashboard', compact(
+        'user', 'weightLogs', 'caloriesEaten', 
+        'chartDates', 'chartWeights',
+        'proteinEaten', 'carbsEaten', 'fatEaten'
+    ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

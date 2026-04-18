@@ -14,25 +14,83 @@
                 // Color logic: green if good, red if they overate
                 $barColor = $caloriesEaten > $target ? 'bg-red-500' : 'bg-green-500';
             @endphp
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold mb-2">Today's Calorie Progress</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <div class="flex justify-between text-sm mb-1">
-                    <span><strong class="text-lg">{{ $caloriesEaten }}</strong> kcal eaten</span>
-                    <span><strong class="text-lg">{{ $target }}</strong> kcal target</span>
+                @php
+                    $target = $user->daily_calorie_target;
+                    $percentage = $target > 0 ? min(100, round(($caloriesEaten / $target) * 100)) : 0;
+                    $barColor = $caloriesEaten > $target ? 'bg-red-500' : 'bg-green-500';
+                @endphp
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <h3 class="text-lg font-bold mb-2">Today's Calorie Progress</h3>
+                    <div class="flex justify-between text-sm mb-1 mt-4">
+                        <span><strong class="text-lg">{{ $caloriesEaten }}</strong> kcal eaten</span>
+                        <span><strong class="text-lg">{{ $target }}</strong> kcal target</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mt-2 mb-2">
+                        <div class="{{ $barColor }} h-4 rounded-full transition-all duration-500 ease-in-out" style="width: {{ $percentage }}%"></div>
+                    </div>
+                    <p class="text-sm text-gray-500 text-right mt-1">
+                        @if($caloriesEaten > $target)
+                            <span class="text-red-500 font-bold">You are {{ $caloriesEaten - $target }} kcal over!</span>
+                        @else
+                            <span class="text-green-600 font-bold">{{ $target - $caloriesEaten }} kcal</span> remaining.
+                        @endif
+                    </p>
                 </div>
-                
-                <div class="w-full bg-gray-200 rounded-full h-4 mt-2 mb-2">
-                    <div class="{{ $barColor }} h-4 rounded-full transition-all duration-500 ease-in-out" style="width: {{ $percentage }}%"></div>
-                </div>
-                
-                <p class="text-sm text-gray-500 text-right mt-1">
-                    @if($caloriesEaten > $target)
-                        <span class="text-red-500 font-bold">You are {{ $caloriesEaten - $target }} kcal over your limit!</span>
+
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <h3 class="text-lg font-bold mb-2">Today's Macronutrients</h3>
+                    
+                    @if($caloriesEaten == 0)
+                        <p class="text-gray-500 mt-4">Log a meal to see your macro breakdown!</p>
                     @else
-                        <span class="text-green-600 font-bold">{{ $target - $caloriesEaten }} kcal</span> remaining today.
+                        <div class="relative h-32 w-full flex justify-center mt-2">
+                            <canvas id="macroChart"></canvas>
+                        </div>
+                        
+                        <div class="mt-6 grid grid-cols-3 divide-x divide-gray-200 text-sm text-center">
+                            <div>
+                                <span class="font-bold text-blue-500 text-lg block">{{ $proteinEaten }}g</span>
+                                <span class="text-gray-500 font-medium">Protein</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-green-500 text-lg block">{{ $carbsEaten }}g</span>
+                                <span class="text-gray-500 font-medium">Carbs</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-yellow-500 text-lg block">{{ $fatEaten }}g</span>
+                                <span class="text-gray-500 font-medium">Fat</span>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const ctxMacro = document.getElementById('macroChart').getContext('2d');
+                                new Chart(ctxMacro, {
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: ['Protein', 'Carbs', 'Fat'],
+                                        datasets: [{
+                                            data: [{{ $proteinEaten }}, {{ $carbsEaten }}, {{ $fatEaten }}],
+                                            backgroundColor: ['#3B82F6', '#22C55E', '#EAB308'], // Blue, Green, Yellow
+                                            borderWidth: 0,
+                                            hoverOffset: 4
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        cutout: '75%', // Makes the donut hole thinner or thicker
+                                        plugins: {
+                                            legend: { display: false } // Hidden because we built a custom HTML legend
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
                     @endif
-                </p>
+                </div>
             </div>
             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">

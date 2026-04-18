@@ -17,15 +17,11 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
-            ],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'email' => ['sometimes', 'required', 'string', 'lowercase', 'email', 'max:255', \Illuminate\Validation\Rule::unique(\App\Models\User::class)->ignore($this->user()->id)],
+            'height_cm' => ['sometimes', 'required', 'integer', 'min:100', 'max:250'],
+            'current_weight_kg' => ['sometimes', 'required', 'numeric', 'min:30', 'max:300'],
+            'goal_type' => ['sometimes', 'required', 'in:lose,maintain,gain'],
         ];
     }
 }

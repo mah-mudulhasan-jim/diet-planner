@@ -24,17 +24,30 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): \Illuminate\Http\RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        
+        // Remember their old weight before we save the new one
+        $oldWeight = $user->current_weight_kg;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // SMART TRIGGER: If the weight changed, add it to the history chart automatically!
+        if ($oldWeight != $user->current_weight_kg) {
+            $user->weightLogs()->create([
+                'weight_kg' => $user->current_weight_kg,
+                'date' => now()->toDateString(),
+            ]);
+        }
+
+        return \Illuminate\Support\Facades\Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
