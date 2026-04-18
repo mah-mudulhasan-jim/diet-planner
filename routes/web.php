@@ -7,6 +7,7 @@ use App\Http\Controllers\MealLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\MetricsController;
+use App\Http\Controllers\AiAssistantController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -63,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/meals', [MealLogController::class, 'store'])->name('meals.store');
     Route::get('/history', [MealLogController::class, 'history'])->name('history.index');
     Route::get('/metrics', [MetricsController::class, 'index'])->name('metrics.index');
+    Route::post('/ask-ai', [AiAssistantController::class, 'ask'])->name('ai.ask');
 });
 
 // ADMIN ONLY ROUTES

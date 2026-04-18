@@ -20,6 +20,7 @@
         </div>
     </x-slot>
 
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @php
@@ -29,6 +30,90 @@
                 // Color logic: green if good, red if they overate
                 $barColor = $caloriesEaten > $target ? 'bg-red-500' : 'bg-green-500';
             @endphp
+
+            <div x-data="{ 
+                    question: '', 
+                    answer: '', 
+                    isLoading: false, 
+                    askAi() {
+                        if(this.question.trim() === '') return;
+                        this.isLoading = true;
+                        this.answer = '';
+                        
+                        fetch('{{ route('ai.ask') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content'),
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ question: this.question })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.answer) {
+                                this.answer = data.answer;
+                            } else {
+                                this.answer = data.error || 'An error occurred.';
+                            }
+                            this.isLoading = false;
+                        })
+                        .catch(error => {
+                            this.answer = 'Network error. Please try again.';
+                            this.isLoading = false;
+                        });
+                    }
+                }"
+    class="mt-8 bg-gradient-to-r from-indigo-900 to-slate-800 rounded-2xl shadow-xl overflow-hidden border border-indigo-700/50">
+
+    <div class="p-6 sm:p-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Personal Health Assistant</h3>
+                <p class="text-indigo-200 text-sm">Powered by AI. Personalized to your exact biometric goals.</p>
+            </div>
+        </div>
+
+        <div class="relative flex items-center">
+            <input type="text" x-model="question" @keydown.enter="askAi"
+                placeholder="Ask me anything... e.g., 'What are some high-protein snacks I can eat to gain weight?'"
+                class="w-full bg-white/10 border border-white/20 text-white placeholder-indigo-300 rounded-xl px-5 py-4 pr-32 focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all"
+                :disabled="isLoading">
+            <button @click="askAi" :disabled="isLoading"
+                class="absolute right-2 top-2 bottom-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-lg px-6 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                <span x-show="!isLoading">Ask AI</span>
+                <span x-show="isLoading" class="flex items-center gap-2">
+                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    Thinking...
+                </span>
+            </button>
+        </div>
+
+        <div x-show="answer !== ''" x-transition.opacity class="mt-6 bg-white/5 border border-white/10 rounded-xl p-6">
+            <div class="flex items-start gap-4">
+                <div class="min-w-[32px] mt-1">
+                    <div
+                        class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                        AI</div>
+                </div>
+                <div class="text-indigo-50 leading-relaxed text-sm whitespace-pre-wrap" x-text="answer"></div>
+            </div>
+        </div>
+    </div>
+</div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
                 @php
@@ -36,6 +121,7 @@
                     $percentage = $target > 0 ? min(100, round(($caloriesEaten / $target) * 100)) : 0;
                     $barColor = $caloriesEaten > $target ? 'bg-red-500' : 'bg-green-500';
                 @endphp
+                
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <h3 class="text-lg font-bold mb-2">Today's Calorie Progress</h3>
                     <div class="flex justify-between text-sm mb-1 mt-4">
@@ -105,7 +191,7 @@
                             });
                         </script>
                     @endif
-                </div>
+                </div>  
             </div>
             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
