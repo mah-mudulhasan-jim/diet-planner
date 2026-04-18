@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MealLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\MetricsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/meals', [MealLogController::class, 'index'])->name('meals.index');
     Route::post('/meals', [MealLogController::class, 'store'])->name('meals.store');
     Route::get('/history', [MealLogController::class, 'history'])->name('history.index');
+    Route::get('/metrics', [MetricsController::class, 'index'])->name('metrics.index');
 });
 
 // ADMIN ONLY ROUTES

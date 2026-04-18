@@ -24,6 +24,10 @@
                         {{ __('History') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('metrics.index')" :active="request()->routeIs('metrics.index')">
+                        {{ __('Metrics & Calculator') }}
+                    </x-nav-link>
+
                     @if(auth()->user()->isAdmin())
                     <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')" class="text-red-600 font-bold">
                         {{ __('Admin Panel') }}
@@ -91,6 +95,9 @@
 
             <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')">
                 {{ __('History') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('metrics.index')" :active="request()->routeIs('metrics.index')">
+                {{ __('Metrics') }}
             </x-responsive-nav-link>
 
             @if(auth()->user()->isAdmin())
