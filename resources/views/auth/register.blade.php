@@ -1,5 +1,9 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
+        <div class="mb-8 text-center pt-2">
+            <h2 class="text-2xl font-extrabold text-gray-900">Join Diet Planner</h2>
+            <p class="mt-2 text-sm text-gray-500">Create your account to start tracking your macros and crushing your fitness goals.</p>
+        </div>
         @csrf
 
         <!-- Name -->
@@ -67,7 +71,7 @@
             </a>
 
             <x-primary-button class="ms-4">
-                {{ __('Register') }}
+                {{ __('Start Planning Now') }}
             </x-primary-button>
         </div>
     </form>

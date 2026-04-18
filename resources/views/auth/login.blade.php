@@ -3,6 +3,10 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
+        <div class="mb-8 text-center pt-2">
+            <h2 class="text-2xl font-extrabold text-gray-900">Welcome Back</h2>
+            <p class="mt-2 text-sm text-gray-500">Log in to view your dashboard and log today's meals.</p>
+        </div>
         @csrf
 
         <!-- Email Address -->
@@ -40,7 +44,7 @@
             @endif
 
             <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+                {{ __('Sign In') }}
             </x-primary-button>
         </div>
     </form>
