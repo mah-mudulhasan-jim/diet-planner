@@ -77,18 +77,53 @@
                 </div>
 
                 <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-lg font-bold mb-4">Recent Logs</h3>
+                    <h3 class="text-lg font-bold mb-4">Weight Progress</h3>
+                    
                     @if($weightLogs->isEmpty())
                         <p class="text-gray-500">No weight logs yet. Start tracking today!</p>
                     @else
-                        <ul class="space-y-3">
-                            @foreach($weightLogs as $log)
-                                <li class="flex justify-between border-b pb-2">
-                                    <span class="text-gray-600">{{ \Carbon\Carbon::parse($log->date)->format('M d, Y') }}</span>
-                                    <span class="font-bold">{{ $log->weight_kg }} kg</span>
-                                </li>
-                            @endforeach
-                        </ul>
+                        <canvas id="weightChart"></canvas>
+                        
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const ctx = document.getElementById('weightChart').getContext('2d');
+                                
+                                // Load the JSON data we passed from the route
+                                const dates = {!! $chartDates !!};
+                                const weights = {!! $chartWeights !!};
+
+                                new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: dates,
+                                        datasets: [{
+                                            label: 'Weight (kg)',
+                                            data: weights,
+                                            borderColor: '#4F46E5', // Indigo color to match Tailwind
+                                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                                            borderWidth: 3,
+                                            tension: 0.3, // Adds a slight curve to the line
+                                            fill: true,
+                                            pointBackgroundColor: '#4F46E5',
+                                            pointRadius: 4
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: { display: false }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: false, // Don't start at 0 kg!
+                                                suggestedMin: Math.min(...weights) - 5, // Auto-scale the bottom
+                                                suggestedMax: Math.max(...weights) + 5  // Auto-scale the top
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
                     @endif
                 </div>
 

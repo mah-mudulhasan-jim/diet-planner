@@ -12,10 +12,15 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
     
-    // Fetch the user's weight history
+    // Fetch the user's weight history (newest first for the list)
     $weightLogs = $user->weightLogs()->orderBy('date', 'desc')->get();
 
-    // Fetch ONLY today's meals to calculate the progress bar
+    // Format data specifically for the Chart (oldest first so it reads left-to-right)
+    $chartData = $user->weightLogs()->orderBy('date', 'asc')->get();
+    $chartDates = $chartData->pluck('date')->toJson();
+    $chartWeights = $chartData->pluck('weight_kg')->toJson();
+
+    // Fetch today's meals
     $todaysMeals = $user->mealLogs()->with('food')->where('date', date('Y-m-d'))->get();
 
     // Math: Sum up the calories for today
@@ -26,8 +31,9 @@ Route::get('/dashboard', function () {
     }
     $caloriesEaten = round($caloriesEaten);
 
-    return view('dashboard', compact('user', 'weightLogs', 'caloriesEaten'));
+    return view('dashboard', compact('user', 'weightLogs', 'caloriesEaten', 'chartDates', 'chartWeights'));
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
