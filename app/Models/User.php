@@ -26,6 +26,7 @@ class User extends Authenticatable
     'height_cm',
     'current_weight_kg',
     'goal_type',
+    'is_admin',
     ];
 
     /**
@@ -74,5 +75,11 @@ class User extends Authenticatable
     public function mealLogs()
     {
         return $this->hasMany(MealLog::class);
+    }
+
+    // Helper function to check if user is an admin
+    public function isAdmin()
+    {
+        return $this->is_admin === 1 || $this->is_admin === true;
     }
 }

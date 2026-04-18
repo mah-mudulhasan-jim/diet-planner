@@ -4,6 +4,8 @@ use App\Http\Controllers\WeightLogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MealLogController;
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\IsAdmin;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,6 +43,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/weight-logs', [WeightLogController::class, 'store'])->name('weight.store');
     Route::get('/meals', [MealLogController::class, 'index'])->name('meals.index');
     Route::post('/meals', [MealLogController::class, 'store'])->name('meals.store');
+});
+
+// ADMIN ONLY ROUTES
+Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    Route::post('/food', [AdminController::class, 'storeFood'])->name('admin.food.store');
 });
 
 require __DIR__.'/auth.php';
