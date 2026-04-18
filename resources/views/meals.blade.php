@@ -21,9 +21,8 @@
                         
                         <div>
                             <x-input-label for="date" :value="__('Date')" />
-                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" value="{{ date('Y-m-d') }}" required />
+                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required />                        
                         </div>
-
                         <div>
                             <x-input-label for="meal_type" :value="__('Meal Type')" />
                             <select id="meal_type" name="meal_type" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>

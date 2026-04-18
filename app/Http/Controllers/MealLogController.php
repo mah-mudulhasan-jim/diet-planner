@@ -25,7 +25,7 @@ class MealLogController extends Controller
             'food_id' => 'required|exists:foods,id',
             'meal_type' => 'required|in:breakfast,lunch,dinner,snack',
             'quantity_g' => 'required|integer|min:1',
-            'date' => 'required|date',
+            'date' => 'required|date|before_or_equal:today',
         ]);
 
         $request->user()->mealLogs()->create([

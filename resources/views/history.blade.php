@@ -12,7 +12,7 @@
                 <form method="GET" action="{{ route('history.index') }}" class="flex items-end gap-4">
                     <div>
                         <x-input-label for="date" :value="__('Select a Date')" />
-                        <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" value="{{ $selectedDate }}" required />
+                        <x-text-input id="date" class="block mt-1 w-full" type="date" name="date" value="{{ $selectedDate }}" max="{{ date('Y-m-d') }}" required />
                     </div>
                     <div class="pb-1">
                         <x-primary-button>{{ __('View Log') }}</x-primary-button>
