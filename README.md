@@ -1,59 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🥗 Smart Diet Planner & Macro Tracker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-stack web application designed to help users track their weight, log daily meals, and visualize their progress toward specific fitness goals (lose, maintain, or gain). Built with a focus on a clean, minimalist UI and dynamic data visualization.
 
-## About Laravel
+## ✨ Core Features
+* **Custom Biometric Authentication:** Secure user registration with custom fields for height, weight, and fitness goals.
+* **Dynamic Algorithmic Goals:** Automatically calculates daily caloric targets based on real-time body weight and chosen goals.
+* **Meal & Macro Tracking:** Log breakfast, lunch, dinner, and snacks with automatic calculations for calories, protein, carbs, and fats.
+* **Data Visualization:** Interactive Chart.js integration featuring a Line Chart for weight history and a Doughnut Chart for daily macro breakdown.
+* **Historical Data Export:** A dedicated history module with a date-picker to review past dietary logs and daily totals.
+* **Secure Admin Panel:** Role-Based Access Control (RBAC) allowing administrators to CRUD items in the global food directory.
+* **Responsive UI/UX:** Built with Tailwind CSS, ensuring a seamless experience across desktop and mobile devices, complete with custom 404 error handling.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠 Tech Stack
+* **Backend:** PHP 8, Laravel 11
+* **Frontend:** Blade Templating, Tailwind CSS, Alpine.js
+* **Database:** MySQL
+* **Visualizations:** Chart.js
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Local Setup Instructions
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/diet-planner.git](https://github.com/mah-mudulhasan-jim/diet-planner.git)
+   cd diet-planner
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+2. Install PHP and Node dependencies:
+```bash
+composer install
+npm install
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. Environment Setup:
 
-## Laravel Sponsors
+Copy the .env.example file to .env.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Generate an app encryption key: php artisan key:generate
 
-### Premium Partners
+Update the .env database credentials to point to your local MySQL instance.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. Database Migration & Seeding:
+```bash
+php artisan migrate
+php artisan db:seed --class=FoodSeeder
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. Run the Application:
+```bash
+php artisan serve
+npm run dev
