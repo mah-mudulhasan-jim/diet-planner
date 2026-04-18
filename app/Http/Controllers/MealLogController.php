@@ -37,4 +37,40 @@ class MealLogController extends Controller
 
         return back()->with('success', 'Meal logged successfully!');
     }
+
+    // Load the History page for a specific date
+    public function history(Request $request)
+    {
+        // If they pick a date, use it. Otherwise, default to today.
+        $selectedDate = $request->input('date', date('Y-m-d'));
+
+        // Fetch meals for that specific date
+        $meals = $request->user()->mealLogs()
+            ->with('food')
+            ->where('date', $selectedDate)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Calculate the daily totals for the selected day
+        $totals = [
+            'calories' => 0,
+            'protein' => 0,
+            'carbs' => 0,
+            'fat' => 0,
+        ];
+
+        foreach ($meals as $log) {
+            $multiplier = $log->quantity_g / 100;
+            $totals['calories'] += ($log->food->calories_per_100g * $multiplier);
+            $totals['protein'] += ($log->food->protein_g * $multiplier);
+            $totals['carbs'] += ($log->food->carbs_g * $multiplier);
+            $totals['fat'] += ($log->food->fat_g * $multiplier);
+        }
+
+        return view('history', [
+            'meals' => $meals,
+            'selectedDate' => $selectedDate,
+            'totals' => $totals
+        ]);
+    }
 }

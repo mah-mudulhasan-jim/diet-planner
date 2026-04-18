@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/weight-logs', [WeightLogController::class, 'store'])->name('weight.store');
     Route::get('/meals', [MealLogController::class, 'index'])->name('meals.index');
     Route::post('/meals', [MealLogController::class, 'store'])->name('meals.store');
+    Route::get('/history', [MealLogController::class, 'history'])->name('history.index');
 });
 
 // ADMIN ONLY ROUTES

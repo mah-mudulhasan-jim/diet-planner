@@ -20,6 +20,10 @@
                         {{ __('Meal Tracker') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')">
+                        {{ __('History') }}
+                    </x-nav-link>
+
                     @if(auth()->user()->isAdmin())
                     <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')" class="text-red-600 font-bold">
                         {{ __('Admin Panel') }}
