@@ -29,21 +29,23 @@ A full-stack web application designed to help users track their weight, log dail
 ```bash
 composer install
 npm install
+```
 
 3. Environment Setup:
-
+```bash
 Copy the .env.example file to .env.
 
 Generate an app encryption key: php artisan key:generate
 
 Update the .env database credentials to point to your local MySQL instance.
-
+```
 4. Database Migration & Seeding:
 ```bash
 php artisan migrate
 php artisan db:seed --class=FoodSeeder
-
+```
 5. Run the Application:
 ```bash
 php artisan serve
 npm run dev
+```
