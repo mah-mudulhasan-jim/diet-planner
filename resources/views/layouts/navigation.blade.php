@@ -84,9 +84,20 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+
+            <x-responsive-nav-link :href="route('meals.index')" :active="request()->routeIs('meals.index')">
                 {{ __('Meal Tracker') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('history.index')" :active="request()->routeIs('history.index')">
+                {{ __('History') }}
+            </x-responsive-nav-link>
+
+            @if(auth()->user()->isAdmin())
+                <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')" class="text-red-600 font-bold">
+                    {{ __('Admin Panel') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

@@ -1,8 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Dashboard') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                @php
+                    $hour = now()->format('H');
+                    if ($hour < 12) {
+                        $greeting = 'Good Morning';
+                    } elseif ($hour < 17) {
+                        $greeting = 'Good Afternoon';
+                    } else {
+                        $greeting = 'Good Evening';
+                    }
+                @endphp
+                {{ $greeting }}, {{ explode(' ', $user->name)[0] }}! 
+            </h2>
+            <span class="text-sm text-gray-500 bg-white px-3 py-1 rounded-full shadow-sm">
+                Target: {{ $user->daily_calorie_target }} kcal
+            </span>
+        </div>
     </x-slot>
 
     <div class="py-12">
