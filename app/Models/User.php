@@ -82,4 +82,16 @@ class User extends Authenticatable
     {
         return $this->is_admin === 1 || $this->is_admin === true;
     }
+
+    // A User might have a Nutritionist Profile
+    public function nutritionistProfile()
+    {
+        return $this->hasOne(NutritionistProfile::class);
+    }
+
+    // A User has many appointments (either as a client or an expert)
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

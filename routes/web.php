@@ -8,6 +8,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\MetricsController;
 use App\Http\Controllers\AiAssistantController;
+use App\Http\Controllers\NutritionistController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,6 +19,25 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
     
+    // --- NEW NOTIFICATION LOGIC ---
+    $unreadMessagesCount = \App\Models\Message::where('receiver_id', $user->id)
+        ->whereNull('read_at')
+        ->count();
+
+    $pendingAppointments = 0;
+    $nextAppointment = null;
+
+    if ($user->role === 'nutritionist') {
+        $pendingAppointments = \App\Models\Appointment::where('nutritionist_id', $user->id)
+            ->where('status', 'pending')
+            ->count();
+    } else {
+        $nextAppointment = \App\Models\Appointment::where('user_id', $user->id)
+            ->where('status', 'confirmed')
+            ->where('scheduled_at', '>=', now())
+            ->orderBy('scheduled_at', 'asc')
+            ->first();
+    }
     // Fetch the user's weight history for the list
     $weightLogs = $user->weightLogs()->orderBy('date', 'desc')->get();
 
@@ -51,7 +73,9 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact(
         'user', 'weightLogs', 'caloriesEaten', 
         'chartDates', 'chartWeights',
-        'proteinEaten', 'carbsEaten', 'fatEaten'
+        'proteinEaten', 'carbsEaten', 'fatEaten', 'unreadMessagesCount', 
+        'pendingAppointments', 
+        'nextAppointment'
     ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -65,7 +89,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/history', [MealLogController::class, 'history'])->name('history.index');
     Route::get('/metrics', [MetricsController::class, 'index'])->name('metrics.index');
     Route::post('/ask-ai', [AiAssistantController::class, 'ask'])->name('ai.ask');
-});
+    Route::get('/experts', [NutritionistController::class, 'index'])->name('experts.index');
+    Route::get('/experts/{expert}', [NutritionistController::class, 'show'])->name('experts.show');
+    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/my-appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::patch('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{user}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages/{user}', [MessageController::class, 'store'])->name('messages.store');
+    });
 
 // ADMIN ONLY ROUTES
 Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
