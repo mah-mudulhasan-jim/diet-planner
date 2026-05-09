@@ -1,23 +1,26 @@
-# 🥗 Smart Diet Planner & Macro Tracker
+# Personal Diet Planner & Health Ecosystem
 
-A full-stack web application designed to help users track their weight, log daily meals, and visualize their progress toward specific fitness goals (lose, maintain, or gain). Built with a focus on a clean, minimalist UI and dynamic data visualization.
+A comprehensive, full-stack Laravel web application designed to help users track their nutrition, monitor biometric progress, consult with verified dieticians, and receive AI-powered health insights.
 
 ## ✨ Core Features
-* **Custom Biometric Authentication:** Secure user registration with custom fields for height, weight, and fitness goals.
-* **Dynamic Algorithmic Goals:** Automatically calculates daily caloric targets based on real-time body weight and chosen goals.
-* **Meal & Macro Tracking:** Log breakfast, lunch, dinner, and snacks with automatic calculations for calories, protein, carbs, and fats.
-* **Data Visualization:** Interactive Chart.js integration featuring a Line Chart for weight history and a Doughnut Chart for daily macro breakdown.
-* **Historical Data Export:** A dedicated history module with a date-picker to review past dietary logs and daily totals.
-* **Secure Admin Panel:** Role-Based Access Control (RBAC) allowing administrators to CRUD items in the global food directory.
-* **Responsive UI/UX:** Built with Tailwind CSS, ensuring a seamless experience across desktop and mobile devices, complete with custom 404 error handling.
+
+*   **Intelligent Dashboard:** Real-time visual tracking of daily caloric intake, macronutrient breakdowns (Chart.js), and weight progression over time.
+*   **Meal & Weight Tracking:** Comprehensive daily logging system that automatically calculates proteins, carbs, fats, and overall calories based on a curated food database.
+*   **AI Health Assistant:** An integrated, context-aware AI chat interface that provides personalized dietary advice based on the user's specific biometric goals.
+*   **Expert Marketplace:** A directory of verified nutritionists and dieticians.
+*   **Appointment Booking Engine:** Users can seamlessly schedule 1-on-1 consultations, and experts can manage, confirm, or decline their incoming requests.
+*   **Secure Direct Messaging:** A real-time, private chat inbox for communication between clients and nutritionists.
+*   **Smart Global Notifications:** Context-aware alerts (via a navigation bell icon) that remind users to log meals, notify experts of pending bookings, and alert users of unread messages.
+*   **Role-Based Access Control (RBAC):** Distinct dashboards and permissions for Standard Users, Nutritionists, and Administrators.
 
 ## 🛠 Tech Stack
-* **Backend:** PHP 8, Laravel 11
-* **Frontend:** Blade Templating, Tailwind CSS, Alpine.js
-* **Database:** MySQL
-* **Visualizations:** Chart.js
 
-## 🚀 Local Setup Instructions
+*   **Backend:** Laravel (PHP 8+)
+*   **Frontend:** Blade Templates, Tailwind CSS, Alpine.js
+*   **Database:** MySQL
+*   **Data Visualization:** Chart.js
+
+## 🚀 Installation & Setup
 
 1. **Clone the repository:**
    ```bash
